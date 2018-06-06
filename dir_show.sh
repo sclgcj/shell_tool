@@ -7,7 +7,7 @@ then
 fi
 
 date 
-dirs=`find . | grep $1`
+dirs=`find ~ | grep $1`
 date
 for d in $dirs:
 do

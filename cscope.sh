@@ -1,3 +1,5 @@
+find `pwd` -name "*.h" -o -name "*.c" -o -name "*.cc" > cscope.files
 
-find -name '*.c' > cscope.file
-cscope -Rbkq
+cscope -bkq -i cscope.files
+
+ctags -R  --C-kinds=+p --fields=+aS --extra=+q
