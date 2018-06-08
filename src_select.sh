@@ -1,13 +1,40 @@
 #!/bin/bash
 
+if [[ "$1" =~ "-h" ]]
+then
+	echo "usage src_select type [search_dir]"
+	exit
+fi
+
 if [ ! -e Inc/$1_hal_conf.h ]
 then
 	echo "don't exist file $1"
 	exit
 fi
 
-function write_data() {
+function filter_path() {
+	local filter_arr=""
+	if [ -z $2 ]
+	then
+		filter_arr=""
+	else
+		filter_arr=`cat $2`
+	fi
+
+	for f in $filter_arr
+	do
+		if [[ $1 =~ $f ]]
+		then
+			return 1;
+		fi
+	done
+
+	return 0;
+}
+
+function write_to_file() {
 	ori=`cat tmp_module_path.txt`
+
 	if [ "$ori" == "" ]
 	then
 		echo $1 > tmp_module_path.txt
@@ -21,7 +48,24 @@ function write_data() {
 	return
 }
 
-search_dir="Middlewares Src"
+function write_data() {
+	if [ -n $2 ]
+	then
+		filter_path $1 $2
+		if [ "$?" != "0" ];
+		then
+			return 
+		fi
+	fi
+	write_to_file $1
+}
+
+if [ -z $2 ]
+then
+	search_dir=""
+else
+	search_dir=`cat $2`
+fi
 
 conf=Inc/$1_hal_conf.h
 
@@ -47,22 +91,25 @@ do
 	ex_path=$(find `pwd` -name $ex_file)
 	if [ "$path" != "" ] 
 	then
-		write_data $path	
+		write_data $path $3
 	fi
 	if [ "$ex_path" != "" ]
 	then
-		write_data $ex_path
+		write_data $ex_path $3
 	fi
 done
 
 src=""
-for d in $search_dir
-do
-	find `pwd`/$d -name *.c | while read line
+if [ "$search_dir" != "" ]
+then
+	for d in $search_dir
 	do
-		write_data $line
+		find `pwd`/$d -name *.c | while read line
+		do
+			write_data $line $3
+		done
 	done
-done
+fi
 
 src=`cat tmp_module_path.txt`
 rm -rf tmp_module.txt
