@@ -7,7 +7,12 @@ then
 fi
 
 date 
-dirs=`find ~ | grep $1`
+if [ -z $2 ]
+then
+dirs=`find ~/Documents/ | grep $1`
+else
+dirs=`find $2 | grep $1`
+fi
 date
 for d in $dirs:
 do
