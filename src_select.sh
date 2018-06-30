@@ -1,14 +1,11 @@
 #!/bin/bash
 
+TMP_PATH=tmp_module_path.txt
+TMP_MOD=tmp_module.txt
+
 if [[ "$1" =~ "-h" ]]
 then
 	echo "usage src_select type [search_dir]"
-	exit
-fi
-
-if [ ! -e Inc/$1_hal_conf.h ]
-then
-	echo "don't exist file $1"
 	exit
 fi
 
@@ -33,17 +30,17 @@ function filter_path() {
 }
 
 function write_to_file() {
-	ori=`cat tmp_module_path.txt`
+	ori=`cat $TMP_PATH`
 
 	if [ "$ori" == "" ]
 	then
-		echo $1 > tmp_module_path.txt
+		echo $1 > $TMP_PATH
 		return
 	fi
 	if [[ ! $ori =~ $1 ]]
 	then
 		ori="$ori $1"
-		echo $ori > tmp_module_path.txt
+		echo $ori > $TMP_PATH
 	fi
 	return
 }
@@ -67,19 +64,33 @@ else
 	search_dir=`cat $2`
 fi
 
-conf=Inc/$1_hal_conf.h
+cur_dir=`pwd`
+conf=`find $cur_dir/$search_dir -name $1_hal_conf.h`
+if [ -z $conf ]
+then
+	echo "don't exist file $1"
+	exit
+fi
 
-echo "" > tmp_module.txt
-echo "" > tmp_module_path.txt
+#echo "conf = $conf"
 
-write_data "`pwd`/Drivers/STM32F1xx_HAL_Driver/Src/stm32f1xx_hal.c"
+#conf=Inc/$1_hal_conf.h
+
+echo "" > $TMP_MOD
+echo "" > $TMP_PATH
+
+hal_file=`find $cur_dir/$search_dir/ -name $1_hal.c`
+if [ -n $hal_file ]
+then
+	write_data $hal_file
+fi
 
 start=`cat -n $conf | grep 'Module Selection' | awk '{print $1}'`
 end=`cat -n $conf | grep 'Oscillator Values adaptation' | awk '{print $1}'`
-sed -n '47,94p' $conf | grep define | grep -v "\*"> tmp_module.txt
+sed -n '47,94p' $conf | grep define | grep -v "\*"> $TMP_MOD
 
 src=""
-cat tmp_module.txt | while read line
+cat $TMP_MOD | while read line
 do
 	#echo $line	
 	name=`echo -ne $line | awk 'BEGIN{FS="_"}{print $2}'`
@@ -87,8 +98,8 @@ do
 	#echo $low
 	src_file=$1_hal_$low.c
 	ex_file=$1_hal_$low_ex.c
-	path=$(find `pwd` -name $src_file)
-	ex_path=$(find `pwd` -name $ex_file)
+	path=$(find `pwd`/$search_dir -name $src_file)
+	ex_path=$(find `pwd`/$search_dir -name $ex_file)
 	if [ "$path" != "" ] 
 	then
 		write_data $path $3
@@ -99,18 +110,18 @@ do
 	fi
 done
 
-src=""
-if [ "$search_dir" != "" ]
-then
-	for d in $search_dir
-	do
-		find `pwd`/$d -name *.c | while read line
-		do
-			write_data $line $3
-		done
-	done
-fi
+#src=""
+#if [ "$search_dir" != "" ]
+#then
+#	for d in $search_dir
+#	do
+#		find `pwd`/$search_dir/$d -name *.c | while read line
+#		do
+#			write_data $line $3
+#		done
+#	done
+#fi
 
-src=`cat tmp_module_path.txt`
-rm -rf tmp_module.txt
+src=`cat $TMP_PATH`
+rm -rf $TMP_MOD
 echo $src
