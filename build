@@ -1,0 +1,27 @@
+#/bin/sh
+
+#
+# 使用方式   build example
+#
+
+b_example() {
+	cd ~/Documents/example
+	source env.sh
+	cd -
+	cd ~/Documents/example
+	if [ "$1" == "" ]
+	then
+		make
+	else
+		make $1
+	fi
+#make $1
+	cd -
+}
+
+
+if [ -n "$1" ]; then
+	echo "Build $1"
+	b_$1 $2
+	exit
+fi
