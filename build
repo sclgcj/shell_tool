@@ -1,0 +1,100 @@
+#/bin/sh
+
+b_low_power() {
+	cd ~/ubus/MPU-SDK-NEW/ql-ol-crosstool/
+	. ql-ol-crosstool-env-init
+	cd -
+	cd ~/ubus/MPU-SDK-NEW/ql-ol-extsdk/example/low_power_consume_app/
+	make $1
+	cd -
+}
+
+b_mcu() {
+	cd ~/Documents/work
+	source env.sh
+	cd -
+	cd ~/Documents/work/intelligent_argritecture/gateway/IA-WA200G-MCU-L083/
+	if [ "$1" == "" ]
+	then
+		make
+	else
+		./build.sh $1
+	fi
+#make $1
+	cd -
+}
+
+b_upgrade() {
+	#cd ~/OpenWrt-SDK-ec20-for-Linux-x86_64/
+	#. env.sh
+	cd ~/ubus/MPU-SDK-NEW/ql-ol-crosstool/
+	. ql-ol-crosstool-env-init
+	cd -
+	cd ~/ubus/MPU-SDK-NEW/pkgs
+	if [ "$1" == "clean" ]; then
+		./build.sh upgrade clean
+	else
+		./build.sh upgrade
+	fi
+	cd -
+}
+
+b_iaiotcc() {
+#cd ~/OpenWrt-SDK-ec20-for-Linux-x86_64/
+	cd /home/cj/Documents/work/intelligent_argritecture/MPU-SDK-NEW/ql-ol-crosstool/
+	. env.sh
+	cd -
+	cd /home/cj/Documents/work/intelligent_argritecture/MPU-SDK-NEW/pkgs/iaiotcc/src
+	mkdir -p build
+	cd -
+	cd /home/cj/Documents/work/intelligent_argritecture/MPU-SDK-NEW/pkgs/iaiotcc/src/build
+	cmake ..
+	if [ "$1" == "clean" ];then
+		make clean 
+	else
+		make
+	fi
+	cd -
+}
+
+b_jmcu() {
+	cd ~/ubus
+	source env.sh
+	cd - 
+	cd ~/ubus/jijing/IA-WA200MW-MCU-L083
+	make $1
+	cd -
+}
+
+b_mboot() {
+	cd ~/ubus
+	source env.sh
+	cd -
+	cd ~/ubus/mcu-boot
+	make $1
+	cd -
+}
+
+b_jc() {
+	cd ~/Documents/work
+	source env.sh
+	cd -
+	cd ~/Documents/work/jiche/jcode/jc_hw_test/
+	make $1
+	cd -
+}
+
+b_f303() {
+	cd ~/Documents/work/
+	source env.sh
+	cd -
+	cd ~/Documents/work/jiche/jcode/f303/
+	make $1
+	cd -
+}
+
+if [ -n "$1" ]; then
+	echo "Build $1"
+	b_$1 $2
+	exit
+fi
