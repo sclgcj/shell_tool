@@ -124,4 +124,5 @@ done
 
 src=`cat $TMP_PATH`
 rm -rf $TMP_MOD
+rm -rf $TMP_PATH
 echo $src

@@ -129,11 +129,15 @@ do
 	else
 		src=$name
 	fi
-	#if [ ! -d $name ]
-	#then
-	#	write_data `pwd`$name $suffix
-	#	continue
-	#fi
+	if [ ! -d $name ]
+	then
+		file_suffix=${name##*.}
+		if [ "$file_suffix" == "$suffix" ]
+		then
+			write_data `pwd`/$name $suffix
+		fi
+		continue
+	fi
 	if [ "$suffix" == "h" ]
 	then
 		write_data `pwd`/$name/ $suffix
