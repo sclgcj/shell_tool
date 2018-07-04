@@ -97,7 +97,7 @@ do
 	low=$(echo $name | tr '[A-Z]' '[a-z]')
 	#echo $low
 	src_file=$1_hal_$low.c
-	ex_file=$1_hal_$low_ex.c
+	ex_file=$1_hal_${low}_ex.c
 	path=$(find `pwd`/$search_dir -name $src_file)
 	ex_path=$(find `pwd`/$search_dir -name $ex_file)
 	if [ "$path" != "" ] 
