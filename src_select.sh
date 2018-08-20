@@ -87,7 +87,7 @@ fi
 
 start=`cat -n $conf | grep 'Module Selection' | awk '{print $1}'`
 end=`cat -n $conf | grep 'Oscillator Values adaptation' | awk '{print $1}'`
-sed -n '47,94p' $conf | grep define | grep -v "\*"> $TMP_MOD
+sed -n "$start,${end}p" $conf | grep define | grep -v "\*"> $TMP_MOD
 
 src=""
 cat $TMP_MOD | while read line
