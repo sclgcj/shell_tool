@@ -7,8 +7,6 @@ dir.sh   用于根据关键字查找当前目录所有子目录，如果有匹�
 
 cscope.sh    用于查找当前目录下的.c .cpp 文件，生成cscope需要的文件
 
-vim_port.tar.gz  惯用的vim配置，会持续改进
-
 cscope_auto.sh 用于自动更新cscope.sh 数据库
 
 vip.sh  包装了cscope_auto.sh 和 vim 两个工具，用于在打开工程目录的时候可以自动添加当前目录的cscope更新, 退出时
