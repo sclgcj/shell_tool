@@ -10,7 +10,7 @@ if [ -n "$1" ];then
 fi
 while :;
 do
-	echo "cscope.sh $proj_conf >/dev/null 2>&1, cur_dir = `pwd`"
+	#echo "cscope.sh $proj_conf >/dev/null 2>&1, cur_dir = `pwd`"
 	#cscope.sh $proj_conf >/dev/null 2>&1
 	cscope.sh $proj_conf
 	#rm -rf cscope.out
