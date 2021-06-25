@@ -67,6 +67,8 @@ syntax on                   " 自动语法高亮
 ""autocmd FileType css set omnifunc=csscomplete#CompleteCSS
 ""autocmd FileType html set omnifunc=htmlcomplete#CompleteTags
 
+set ts=4	           "tabstop 缩写, 表示一个缩进为四个空格
+set expandtab 		   "表示缩进使用空格表示，noexpandtab 则是用制表符表示一个缩进
 set autoindent
 set ai
 set si
